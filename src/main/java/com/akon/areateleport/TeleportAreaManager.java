@@ -84,7 +84,7 @@ public class TeleportAreaManager {
 	}
 
 	public Collection<String> getTeleportAreaNames(World world) {
-		return Collections.unmodifiableCollection(this.fromWorld.get(world).stream().map(TeleportArea::getName).sorted(String::compareTo).collect(Collectors.toList()));
+		return Collections.unmodifiableCollection(this.fromWorld.get(world).stream().map(TeleportArea::getName).collect(Collectors.toList()));
 	}
 
 }
