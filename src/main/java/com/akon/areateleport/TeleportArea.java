@@ -3,7 +3,6 @@ package com.akon.areateleport;
 import com.google.common.collect.Maps;
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
@@ -35,10 +34,6 @@ public class TeleportArea implements ConfigurationSerializable {
 
 	@Override
 	public @NotNull Map<String, Object> serialize() {
-		MessageUtil.sendMessage(Bukkit.getConsoleSender(), "StackTrace: ");
-		for (StackTraceElement ste: new Throwable().getStackTrace()) {
-			MessageUtil.sendMessage(Bukkit.getConsoleSender(), "    {0}", ste);
-		}
 		LinkedHashMap<String, Object> map = Maps.newLinkedHashMap();
 		map.put("name", this.name);
 		map.put("tp-location", this.tpLocation);
