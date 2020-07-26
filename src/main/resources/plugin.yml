@@ -1,0 +1,23 @@
+name: AreaTeleport
+version: ${project.version}
+main: com.akon.areateleport.AreaTeleport
+api-version: 1.15
+depend: [WorldEdit]
+authors: [akon]
+
+commands:
+  areateleport:
+    aliases: [at]
+    permission: areateleport.command.areateleport
+
+permissions:
+  areateleport.*:
+    default: op
+    children:
+      areateleport.command.*: true
+  areateleport.command.*:
+    default: op
+    children:
+      areateleport.command.areateleport: true
+  areateleport.command.areateleport:
+    default: op
