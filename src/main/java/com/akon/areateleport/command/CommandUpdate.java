@@ -66,7 +66,7 @@ public class CommandUpdate extends CommandAbstract {
 						MessageUtil.sendMessage(sender, "&c選択範囲の外に出てください");
 					}
 				} catch (IncompleteRegionException ex) {
-					MessageUtil.sendMessage(sender, "c範囲を選択してください");
+					MessageUtil.sendMessage(sender, "&c範囲を選択してください");
 				}
 			} else {
 				MessageUtil.sendMessage(sender, "&c{0}という名前のテレポートエリアは登録されていません", args[0].toLowerCase());
