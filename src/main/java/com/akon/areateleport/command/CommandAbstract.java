@@ -1,12 +1,11 @@
 package com.akon.areateleport.command;
 
 import com.akon.areateleport.AreaTeleport;
-import com.google.common.collect.Lists;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class CommandAbstract {
 
@@ -17,9 +16,7 @@ public abstract class CommandAbstract {
 	}
 
 	protected List<String> nameComplete(String arg) {
-		ArrayList<String> result = Lists.newArrayList();
-		AreaTeleport.getTeleportAreaManager().getTeleportAreaNames().stream().filter(name -> name.toLowerCase().startsWith(arg.toLowerCase())).forEach(result::add);
-		return result;
+		return AreaTeleport.getTeleportAreaManager().getTeleportAreaNames().stream().filter(name -> name.toLowerCase().startsWith(arg.toLowerCase())).collect(Collectors.toList());
 	}
 
 	public final String name() {

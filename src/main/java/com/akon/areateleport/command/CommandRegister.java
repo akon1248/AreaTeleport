@@ -26,7 +26,7 @@ public class CommandRegister extends CommandAbstract {
 		if (sender instanceof Player) {
 			if (AreaTeleport.getTeleportAreaManager().getTeleportArea(args[0]) == null) {
 				try {
-					Region selection = AreaTeleport.getWEInstance().getSession((Player) sender).getSelection(new BukkitWorld(((Player) sender).getWorld()));
+					Region selection = AreaTeleport.getWEInstance().getSession((Player)sender).getSelection(new BukkitWorld(((Player) sender).getWorld()));
 					BlockVector3 min = selection.getMinimumPoint();
 					BlockVector3 max = selection.getMaximumPoint();
 					BoundingBox boundingBox = new BoundingBox(min.getX(), min.getY(), min.getZ(), max.getX() + 1, max.getY() + 1, max.getZ() + 1);

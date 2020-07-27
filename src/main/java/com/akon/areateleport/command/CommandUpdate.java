@@ -37,9 +37,9 @@ public class CommandUpdate extends CommandAbstract {
 					if (!boundingBox.overlaps(((Player)sender).getBoundingBox())) {
 						Bukkit.getScheduler().runTaskAsynchronously(AreaTeleport.getInstance(), () -> {
 							TeleportArea overlappedArea = null;
-							for (TeleportArea ta: AreaTeleport.getTeleportAreaManager().getTeleportAreas(((Player)sender).getWorld())) {
-								if (!ta.getName().equalsIgnoreCase(args[0]) && ta.getArea().overlaps(boundingBox)) {
-									overlappedArea = ta;
+							for (TeleportArea tpArea: AreaTeleport.getTeleportAreaManager().getTeleportAreas(((Player)sender).getWorld())) {
+								if (!tpArea.getName().equalsIgnoreCase(args[0]) && tpArea.getArea().overlaps(boundingBox)) {
+									overlappedArea = tpArea;
 									break;
 								}
 							}
@@ -65,8 +65,8 @@ public class CommandUpdate extends CommandAbstract {
 					} else {
 						MessageUtil.sendMessage(sender, "&c選択範囲の外に出てください");
 					}
-				} catch (IncompleteRegionException ignored) {
-
+				} catch (IncompleteRegionException ex) {
+					MessageUtil.sendMessage(sender, "c範囲を選択してください");
 				}
 			} else {
 				MessageUtil.sendMessage(sender, "&c{0}という名前のテレポートエリアは登録されていません", args[0].toLowerCase());
