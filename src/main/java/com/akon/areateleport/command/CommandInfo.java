@@ -23,7 +23,7 @@ public class CommandInfo extends CommandAbstract {
 		if ((teleportArea = AreaTeleport.getTeleportAreaManager().getTeleportArea(args[0])) != null) {
 			MessageUtil.sendMessage(sender, "&6----------&5&lTeleportArea Info&6----------");
 			MessageUtil.sendMessage(sender, "&bName: &d{0}", teleportArea.getName());
-			MessageUtil.sendMessage(sender, "&bWorld: &d{0}", teleportArea.getName());
+			MessageUtil.sendMessage(sender, "&bWorld: &d{0}", teleportArea.getWorld().getName());
 			DecimalFormat format = new DecimalFormat("##.##");
 			Location tpLoc = teleportArea.getTpLocation();
 			MessageUtil.sendMessage(sender, "&bTP Location: &d({0}, {1}, {2})", format.format(tpLoc.getX()), format.format(tpLoc.getY()), format.format(tpLoc.getZ()));
