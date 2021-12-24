@@ -6,7 +6,7 @@
 
     <groupId>com.akon.areateleport</groupId>
     <artifactId>AreaTeleport</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
     <packaging>jar</packaging>
 
     <name>AreaTeleport</name>
@@ -64,7 +64,7 @@
         </repository>
         <repository>
             <id>enginehub-maven</id>
-            <url>http://maven.enginehub.org/repo/</url>
+            <url>https://maven.enginehub.org/repo/</url>
         </repository>
     </repositories>
 
@@ -72,24 +72,32 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.15.2-R0.1-SNAPSHOT</version>
+            <version>1.16.5-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>plugin-annotations</artifactId>
+            <version>1.2.3-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.sk89q.worldedit</groupId>
             <artifactId>worldedit-bukkit</artifactId>
             <version>7.1.0-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.12</version>
+            <version>1.18.22</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>16.0.1</version>
+            <version>22.0.0</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

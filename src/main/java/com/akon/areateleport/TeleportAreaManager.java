@@ -2,16 +2,18 @@ package com.akon.areateleport;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Maps;
+import lombok.Value;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.util.BoundingBox;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.stream.Collectors;
 
 public class TeleportAreaManager {
 
@@ -23,11 +25,10 @@ public class TeleportAreaManager {
 	private final File dataFile;
 	private FileConfiguration dataFileYaml;
 	private final HashMap<String, TeleportArea> teleportAreas = Maps.newHashMap();
-	private final HashMultimap<World, TeleportArea> fromWorld = HashMultimap.create();
+	private final HashMultimap<ChunkKey, TeleportArea> fromChunk = HashMultimap.create();
 	
 	public void reload() {
 		this.teleportAreas.clear();
-		this.fromWorld.clear();
 		if (this.dataFile.exists()) {
 			this.dataFileYaml = YamlConfiguration.loadConfiguration(this.dataFile);
 			for (String key: this.dataFileYaml.getKeys(false)) {
@@ -42,7 +43,17 @@ public class TeleportAreaManager {
 	public boolean registerTeleportArea(TeleportArea area) {
 		if (!this.teleportAreas.containsKey(area.getName())) {
 			this.teleportAreas.put(area.getName(), area);
-			this.fromWorld.put(area.getWorld(), area);
+			World world = area.getWorld();
+			BoundingBox bb = area.getArea();
+			int minChunkX = Location.locToBlock(bb.getMinX()) >> 4;
+			int minChunkZ = Location.locToBlock(bb.getMinZ()) >> 4;
+			int maxChunkX = Location.locToBlock(bb.getMaxX()) >> 4;
+			int maxChunkZ = Location.locToBlock(bb.getMaxZ()) >> 4;
+			for (int x = minChunkX; x <= maxChunkX; x++) {
+				for (int z = minChunkZ; z <= maxChunkZ; z++) {
+					this.fromChunk.put(new ChunkKey(world, x, z), area);
+				}
+			}
 			return true;
 		}
 		return false;
@@ -51,7 +62,6 @@ public class TeleportAreaManager {
 	public boolean unregisterTeleportArea(TeleportArea area) {
 		if (this.teleportAreas.get(area.getName()) == area) {
 			this.teleportAreas.remove(area.getName());
-			this.fromWorld.remove(area.getWorld(), area);
 			return true;
 		}
 		return false;
@@ -71,20 +81,21 @@ public class TeleportAreaManager {
 		return this.teleportAreas.get(name.toLowerCase());
 	}
 
-	public Collection<TeleportArea> getTeleportAreas() {
-		return Collections.unmodifiableCollection(this.teleportAreas.values());
-	}
-
-	public Collection<TeleportArea> getTeleportAreas(World world) {
-		return Collections.unmodifiableCollection(this.fromWorld.get(world));
+	public Collection<TeleportArea> getTeleportAreas(org.bukkit.Chunk chunk) {
+		return Collections.unmodifiableCollection(this.fromChunk.get(new ChunkKey(chunk.getWorld(), chunk.getX(), chunk.getZ())));
 	}
 
 	public Collection<String> getTeleportAreaNames() {
 		return Collections.unmodifiableCollection(this.teleportAreas.keySet());
 	}
 
-	public Collection<String> getTeleportAreaNames(World world) {
-		return Collections.unmodifiableCollection(this.fromWorld.get(world).stream().map(TeleportArea::getName).collect(Collectors.toList()));
+	@Value
+	private static class ChunkKey {
+
+		World world;
+		int x;
+		int y;
+
 	}
 
 }

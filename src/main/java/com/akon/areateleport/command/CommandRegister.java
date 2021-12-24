@@ -31,10 +31,10 @@ public class CommandRegister extends CommandAbstract {
 						BlockVector3 min = selection.getMinimumPoint();
 						BlockVector3 max = selection.getMaximumPoint();
 						BoundingBox boundingBox = new BoundingBox(min.getX(), min.getY(), min.getZ(), max.getX() + 1, max.getY() + 1, max.getZ() + 1);
-						if (!boundingBox.overlaps(((Player) sender).getBoundingBox())) {
+						if (!boundingBox.overlaps(((Player)sender).getBoundingBox())) {
 							Bukkit.getScheduler().runTaskAsynchronously(AreaTeleport.getInstance(), () -> {
 								TeleportArea overlappedArea = null;
-								for (TeleportArea teleportArea : AreaTeleport.getTeleportAreaManager().getTeleportAreas(((Player) sender).getWorld())) {
+								for (TeleportArea teleportArea : AreaTeleport.getTeleportAreaManager().getTeleportAreas(((Player)sender).getWorld().getChunkAt(((Player)sender).getLocation()))) {
 									if (teleportArea.getArea().overlaps(boundingBox)) {
 										overlappedArea = teleportArea;
 										break;

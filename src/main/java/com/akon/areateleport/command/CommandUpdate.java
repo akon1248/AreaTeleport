@@ -37,7 +37,7 @@ public class CommandUpdate extends CommandAbstract {
 					if (!boundingBox.overlaps(((Player)sender).getBoundingBox())) {
 						Bukkit.getScheduler().runTaskAsynchronously(AreaTeleport.getInstance(), () -> {
 							TeleportArea overlappedArea = null;
-							for (TeleportArea tpArea: AreaTeleport.getTeleportAreaManager().getTeleportAreas(((Player)sender).getWorld())) {
+							for (TeleportArea tpArea: AreaTeleport.getTeleportAreaManager().getTeleportAreas(((Player)sender).getWorld().getChunkAt(((Player)sender).getLocation()))) {
 								if (!tpArea.getName().equalsIgnoreCase(args[0]) && tpArea.getArea().overlaps(boundingBox)) {
 									overlappedArea = tpArea;
 									break;

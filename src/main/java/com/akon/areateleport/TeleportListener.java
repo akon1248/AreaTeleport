@@ -9,8 +9,6 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.util.BoundingBox;
 
-import java.util.function.Consumer;
-
 public class TeleportListener implements Listener {
 
 	@EventHandler
@@ -23,7 +21,7 @@ public class TeleportListener implements Listener {
 			BoundingBox boundingBox = e.getPlayer().getBoundingBox().shift(to.getX()-from.getX(), to.getY()-from.getY(), to.getZ()-from.getZ());
 			Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
 				TeleportArea tpArea = null;
-				for (TeleportArea teleportArea : AreaTeleport.getTeleportAreaManager().getTeleportAreas(player.getWorld())) {
+				for (TeleportArea teleportArea : AreaTeleport.getTeleportAreaManager().getTeleportAreas(player.getWorld().getChunkAt(player.getLocation()))) {
 					if (teleportArea.getArea().overlaps(boundingBox)) {
 						tpArea = teleportArea;
 						break;
@@ -32,28 +30,21 @@ public class TeleportListener implements Listener {
 				if (tpArea != null) {
 					TeleportArea finalTPArea = tpArea;
 					Bukkit.getScheduler().runTask(plugin, () -> {
-						boolean flag = true;
-						for (MetadataValue value: player.getMetadata("Teleported")) {
-							if (value.getOwningPlugin() == plugin) {
-								flag = !value.asBoolean();
-							}
-						}
+						boolean flag = player.getMetadata("Teleported").stream()
+							.filter(value -> value.getOwningPlugin() == plugin)
+							.findAny()
+							.map(MetadataValue::asBoolean)
+							.orElse(true);
 						if (flag) {
 							player.setMetadata("Teleported", new FixedMetadataValue(plugin, true));
 							TeleportAreaEvent event = new TeleportAreaEvent(player, finalTPArea, to, finalTPArea.getTpLocation());
 							Bukkit.getPluginManager().callEvent(event);
 							if (!event.isCancelled()) {
-								//関数型プログラミングへの憧れ
-								//クラスならメソッド内でも宣言できるんだからメソッドもそうしてくれればいいのに
-								Consumer<Location> teleportEffect = (loc) -> {
-									loc.getWorld().playEffect(loc, Effect.ENDER_SIGNAL, 0);
-									loc.getWorld().playSound(loc, Sound.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1, 1);
-								};
-								teleportEffect.accept(to);
+								teleportEffect(to);
 								player.setFallDistance(0);
 								player.eject();
 								player.teleport(event.getTo());
-								teleportEffect.accept(event.getTo());
+								teleportEffect(event.getTo());
 								Bukkit.getScheduler().runTaskLater(plugin, () -> player.removeMetadata("Teleported", plugin), 1);
 							}
 						}
@@ -61,6 +52,11 @@ public class TeleportListener implements Listener {
 				}
 			});
 		}
+	}
+
+	private static void teleportEffect(Location loc) {
+		loc.getWorld().playEffect(loc, Effect.ENDER_SIGNAL, 0);
+		loc.getWorld().playSound(loc, Sound.ENTITY_ENDERMAN_TELEPORT, SoundCategory.PLAYERS, 1, 1);
 	}
 
 }
